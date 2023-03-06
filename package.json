@@ -1,0 +1,22 @@
+{
+  "name": "word-openai",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Alan-Kuan",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "validate": "office-toolbox validate -m manifest.xml",
+    "sideload": "office-toolbox sideload -m manifest.xml -a word"
+  },
+  "dependencies": {
+    "office-toolbox": "^0.3.0",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "vite": "^4.1.4"
+  }
+}
