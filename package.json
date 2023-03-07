@@ -12,8 +12,10 @@
     "sideload": "office-toolbox sideload -m manifest.xml -a word"
   },
   "dependencies": {
+    "@mdi/font": "^7.1.96",
     "office-toolbox": "^0.3.0",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vuetify": "^3.1.7"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
