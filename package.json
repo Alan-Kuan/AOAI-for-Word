@@ -1,6 +1,6 @@
 {
   "name": "word-openai",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "author": "Alan-Kuan",
   "type": "module",
