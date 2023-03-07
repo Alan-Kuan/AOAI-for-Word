@@ -1,5 +1,6 @@
 <script setup>
 import WritingStyleTrans from '@/components/WritingStyleTrans.vue';
+import Notification from '@/components/Notification.vue';
 </script>
 
 <template>
@@ -9,8 +10,8 @@ import WritingStyleTrans from '@/components/WritingStyleTrans.vue';
         Word OpenAI
       </v-app-bar-title>
     </v-app-bar>
-
     <v-main>
+      <Notification />
       <WritingStyleTrans />
     </v-main>
   </v-layout>
