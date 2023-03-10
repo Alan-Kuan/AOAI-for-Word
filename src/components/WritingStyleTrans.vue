@@ -2,7 +2,14 @@
 import { ref } from 'vue';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
-import FoldableSection from './FoldableSection.vue';
+import { mode } from '@/libs/parameter.js';
+import FoldableSection from '@/components/FoldableSection.vue';
+
+const props = defineProps({
+  modifiable: { type: Boolean, default: true },
+  temperature_list: { type: Array, default: [0.5, 1] },
+  top_p_list: { type: Array, default: [1, 1] },
+});
 
 const default_prompt = ref('請用白話文改寫：');
 const inferencing = ref(false);
@@ -22,11 +29,14 @@ function onConvert() {
     }
 
     inferencing.value = true;
-    const converted_text = await openai.complete({
-        prompt: default_prompt.value + selected_text,
-        max_tokens: 500,
-      });
+    const converted_text = await openai.complete(
+      default_prompt.value + selected_text,
+      props.temperature_list[mode.value],
+      props.top_p_list[mode.value],
+    );
     inferencing.value = false;
+
+    if (!converted_text) return;
 
     Office.context.document.setSelectedDataAsync(converted_text, res => {
       notify(res.error.message);
@@ -39,7 +49,13 @@ function onConvert() {
   <FoldableSection title="換句話說">
     <v-card class="mb-3" flat>
       <v-card-text>
-        <v-textarea label="提詞前綴" v-model="default_prompt" />
+        <v-textarea
+          label="提詞前綴"
+          v-model="default_prompt"
+          :disabled="!modifiable"
+          rows="3"
+          counter
+        />
         <v-btn
           class="w-100"
           color="blue"
