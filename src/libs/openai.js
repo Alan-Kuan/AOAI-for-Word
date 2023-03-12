@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { max_tokens } from '@/libs/parameter.js';
+import { max_tokens } from '@/libs/settings.js';
 import { notify } from '@/libs/notify.js';
 import { curr_completion_tokens, curr_prompt_tokens, total_tokens } from '@/libs/token_usage';
 

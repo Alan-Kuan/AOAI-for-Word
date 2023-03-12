@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
-import { mode } from '@/libs/parameter.js';
+import { mode } from '@/libs/settings.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 
 const props = defineProps({

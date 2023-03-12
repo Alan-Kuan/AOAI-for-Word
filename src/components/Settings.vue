@@ -1,10 +1,10 @@
 <script setup>
 import FoldableSection from '@/components/FoldableSection.vue';
-import { max_tokens, mode } from '@/libs/parameter.js';
+import { max_tokens, mode } from '@/libs/settings.js';
 </script>
 
 <template>
-  <FoldableSection title="參數" :default_expanded="false">
+  <FoldableSection title="設定" :default_expanded="false">
     <v-card flat>
       <v-card-text>
         <v-text-field

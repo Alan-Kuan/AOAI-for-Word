@@ -1,6 +1,6 @@
 <script setup>
 import Notification from '@/components/Notification.vue';
-import Parameter from '@/components/Parameter.vue';
+import Settings from '@/components/Settings.vue';
 import WritingStyleTrans from '@/components/WritingStyleTrans.vue';
 import TokenUsage from '@/components/TokenUsage.vue';
 </script>
@@ -9,7 +9,7 @@ import TokenUsage from '@/components/TokenUsage.vue';
   <v-layout>
     <v-main>
       <Notification />
-      <Parameter />
+      <Settings />
       <WritingStyleTrans />
     </v-main>
     <TokenUsage />
