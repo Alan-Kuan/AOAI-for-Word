@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
-import { mode } from '@/libs/settings.js';
+import { generate_mode, replace_mode } from '@/libs/settings.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 
 const props = defineProps({
@@ -14,33 +14,33 @@ const props = defineProps({
 const default_prompt = ref('請用白話文改寫：');
 const inferencing = ref(false);
 
-function onConvert() {
-  Office.context.document.getSelectedDataAsync(Office.CoercionType.Text, async res => {
-    if (res.status === Office.AsyncResultStatus.Failed) {
-      notify(res.error.message);
-      return;
-    }
+async function onConvert() {
+  await Word.run(async ctx => {
+    const range = ctx.document.getSelection();
 
-    const selected_text = res.value;
+    range.load({ text: true, isEmpty: true })
+    await ctx.sync();
 
-    if (selected_text === '') {
+    if (range.isEmpty) {
       notify('沒有選取任何文字');
       return;
     }
 
     inferencing.value = true;
     const converted_text = await openai.complete(
-      default_prompt.value + selected_text,
-      props.temperature_list[mode.value],
-      props.top_p_list[mode.value],
+      default_prompt.value + range.text,
+      props.temperature_list[generate_mode.value],
+      props.top_p_list[generate_mode.value],
     );
     inferencing.value = false;
 
     if (!converted_text) return;
 
-    Office.context.document.setSelectedDataAsync(converted_text, res => {
-      notify(res.error.message);
-    });
+    const insert_loc = replace_mode.value ?
+                       Word.InsertLocation.replace :
+                       Word.InsertLocation.end;
+    range.insertText(converted_text, insert_loc);
+    await ctx.sync();
   });
 }
 </script>
