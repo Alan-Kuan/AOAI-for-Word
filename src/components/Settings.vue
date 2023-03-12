@@ -1,6 +1,14 @@
 <script setup>
 import FoldableSection from '@/components/FoldableSection.vue';
-import { max_tokens, mode } from '@/libs/settings.js';
+import SecretInput from './SecretInput.vue';
+import {
+  max_tokens,
+  mode,
+  api_key,
+  api_endpoint,
+  api_deployment,
+  api_version,
+} from '@/libs/settings.js';
 </script>
 
 <template>
@@ -30,6 +38,24 @@ import { max_tokens, mode } from '@/libs/settings.js';
             <v-btn>創意</v-btn>
           </v-btn-toggle>
         </div>
+
+        <SecretInput
+          class="mt-3"
+          label="API 金鑰"
+          v-model="api_key"
+        />
+        <SecretInput
+          label="API 端點"
+          v-model="api_endpoint"
+        />
+        <SecretInput
+          label="部署模型名稱"
+          v-model="api_deployment"
+        />
+        <SecretInput
+          label="部署模型版本 (日期)"
+          v-model="api_version"
+        />
       </v-card-text>
     </v-card>
   </FoldableSection>
