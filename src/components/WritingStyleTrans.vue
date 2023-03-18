@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
-import { generate_mode, replace_mode } from '@/libs/settings.js';
+import { generate_location, generate_mode } from '@/libs/settings.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 
 const props = defineProps({
@@ -27,7 +27,7 @@ async function onConvert() {
     }
 
     inferencing.value = true;
-    const converted_text = await openai.complete(
+    let converted_text = await openai.complete(
       default_prompt.value + range.text,
       props.temperature_list[generate_mode.value],
       props.top_p_list[generate_mode.value],
@@ -36,9 +36,12 @@ async function onConvert() {
 
     if (!converted_text) return;
 
-    const insert_loc = replace_mode.value ?
+    const insert_loc = generate_location.value === 0 ?
                        Word.InsertLocation.replace :
                        Word.InsertLocation.end;
+    if (generate_location.value === 2) {
+      converted_text = '\n' + converted_text;
+    }
     range.insertText(converted_text, insert_loc);
     await ctx.sync();
   });

@@ -2,7 +2,7 @@
 import FoldableSection from '@/components/FoldableSection.vue';
 import SecretInput from './SecretInput.vue';
 import {
-  replace_mode,
+  generate_location,
   generate_mode,
   max_tokens,
   api_key,
@@ -16,11 +16,22 @@ import {
   <FoldableSection title="設定" :default_expanded="false">
     <v-card flat>
       <v-card-text>
-        <v-switch
-          label="取代選取文字"
-          v-model="replace_mode"
-          color="blue"
-        />
+        <div>
+          <v-label class="text-caption" text="生成位置" />
+        </div>
+        <div class="mb-3">
+          <v-btn-toggle
+            v-model="generate_location"
+            :mandatory="true"
+            color="blue"
+            variant="outlined"
+            divided
+          >
+            <v-btn>取代</v-btn>
+            <v-btn>接續</v-btn>
+            <v-btn>插入下行</v-btn>
+          </v-btn-toggle>
+        </div>
 
         <v-text-field
           label="單次回應 token 數上限"
@@ -33,7 +44,7 @@ import {
         <div>
           <v-label class="text-caption" text="回應模式" />
         </div>
-        <div>
+        <div class="mb-3">
           <v-btn-toggle
             v-model="generate_mode"
             :mandatory="true"
@@ -47,7 +58,6 @@ import {
         </div>
 
         <SecretInput
-          class="mt-3"
           label="API 金鑰"
           v-model="api_key"
         />

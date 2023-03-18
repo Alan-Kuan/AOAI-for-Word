@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-export const replace_mode = ref(true);
+export const generate_location = ref(0);
 
 export const generate_mode = ref(0);
 export const max_tokens = ref('100');
