@@ -6,13 +6,16 @@ import { generate_location, generate_mode } from '@/libs/settings.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 
 const props = defineProps({
+  title: { type: String, required: true },
   modifiable: { type: Boolean, default: true },
+  default_prompt_prefix: { type: String, default: '' },
+  default_prompt_postfix: { type: String, default: '' },
   temperature_list: { type: Array, default: [0.5, 1] },
   top_p_list: { type: Array, default: [1, 1] },
 });
 
-const prompt_prefix = ref('請用白話文改寫：');
-const prompt_postfix = ref('');
+const prompt_prefix = ref(props.default_prompt_prefix);
+const prompt_postfix = ref(props.default_prompt_postfix);
 const inferencing = ref(false);
 
 async function onConvert() {
@@ -50,7 +53,7 @@ async function onConvert() {
 </script>
 
 <template>
-  <FoldableSection title="換句話說">
+  <FoldableSection :title="title">
     <v-card class="mb-3" flat>
       <v-card-text>
         <v-textarea
