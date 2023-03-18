@@ -11,7 +11,8 @@ const props = defineProps({
   top_p_list: { type: Array, default: [1, 1] },
 });
 
-const default_prompt = ref('請用白話文改寫：');
+const prompt_prefix = ref('請用白話文改寫：');
+const prompt_postfix = ref('');
 const inferencing = ref(false);
 
 async function onConvert() {
@@ -28,7 +29,7 @@ async function onConvert() {
 
     inferencing.value = true;
     let converted_text = await openai.complete(
-      default_prompt.value + range.text,
+      prompt_prefix.value + range.text + prompt_postfix.value,
       props.temperature_list[generate_mode.value],
       props.top_p_list[generate_mode.value],
     );
@@ -54,7 +55,14 @@ async function onConvert() {
       <v-card-text>
         <v-textarea
           label="提詞前綴"
-          v-model="default_prompt"
+          v-model="prompt_prefix"
+          :disabled="!modifiable"
+          rows="3"
+          counter
+        />
+        <v-textarea
+          label="提詞後綴"
+          v-model="prompt_postfix"
           :disabled="!modifiable"
           rows="3"
           counter
