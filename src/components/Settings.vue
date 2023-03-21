@@ -38,6 +38,7 @@ import {
           v-model="max_tokens"
           type="number"
           min="0"
+          max="2048"
           variant="underlined"
         />
 
