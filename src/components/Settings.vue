@@ -61,17 +61,20 @@ import {
           label="API 金鑰"
           v-model="api_key"
         />
-        <SecretInput
+        <v-text-field
           label="API 端點"
           v-model="api_endpoint"
+          variant="underlined"
         />
-        <SecretInput
+        <v-text-field
           label="部署模型名稱"
           v-model="api_deployment"
+          variant="underlined"
         />
-        <SecretInput
+        <v-text-field
           label="部署模型版本 (日期)"
           v-model="api_version"
+          variant="underlined"
         />
       </v-card-text>
     </v-card>
