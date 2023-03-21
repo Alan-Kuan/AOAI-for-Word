@@ -4,8 +4,8 @@ import Settings from '@/components/Settings.vue';
 import Transform from '@/components/Transform.vue';
 import TokenUsage from '@/components/TokenUsage.vue';
 
-const meet_summary_prefix = "這是一篇即時語音的會議記錄\n'''";
-const meet_summary_postfix = "'''\n\n我將會議記錄中的待辦事項條列出來，並做了一段摘要\n'''";
+const meet_summary_prefix = "這是一篇即時語音的會議記錄。\n";
+const meet_summary_postfix = "\n我將會議記錄中的待辦事項條列出來，並做了一段摘要。\n";
 
 </script>
 
