@@ -1,22 +1,20 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
 import { generate_location, generate_mode } from '@/libs/settings.js';
+import { templates } from '@/templates/completion.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 
-const props = defineProps({
-  title: { type: String, required: true },
-  modifiable: { type: Boolean, default: true },
-  default_prompt_prefix: { type: String, default: '' },
-  default_prompt_postfix: { type: String, default: '' },
-  temperature_list: { type: Array, default: [0.5, 1] },
-  top_p_list: { type: Array, default: [1, 1] },
-});
-
-const prompt_prefix = ref(props.default_prompt_prefix);
-const prompt_postfix = ref(props.default_prompt_postfix);
+const selected_template = ref(templates[0]);
 const inferencing = ref(false);
+
+onMounted(() => {
+  for (let template of templates) {
+    template.prompt_prefix = ref(template.default_prompt_prefix);
+    template.prompt_suffix = ref(template.default_prompt_suffix);
+  }
+});
 
 async function onConvert() {
   await Word.run(async ctx => {
@@ -31,10 +29,13 @@ async function onConvert() {
     }
 
     inferencing.value = true;
+    const prefix = selected_template.value.prompt_prefix;
+    const suffix = selected_template.value.prompt_suffix;
+    const params = selected_template.value.params[generate_mode.value];
     let converted_text = await openai.complete(
-      prompt_prefix.value + range.text + prompt_postfix.value,
-      props.temperature_list[generate_mode.value],
-      props.top_p_list[generate_mode.value],
+      prefix + range.text + suffix,
+      params.temperature,
+      params.top_p,
     );
     inferencing.value = false;
 
@@ -50,23 +51,46 @@ async function onConvert() {
     await ctx.sync();
   });
 }
+
+function onResetDefaultTemplate() {
+  selected_template.value.prompt_prefix = selected_template.value.default_prompt_prefix;
+  selected_template.value.prompt_suffix = selected_template.value.default_prompt_suffix;
+}
 </script>
 
 <template>
-  <FoldableSection :title="title">
+  <FoldableSection title="文本生成">
     <v-card class="mb-3" flat>
       <v-card-text>
+        <v-select
+          label="範本"
+          v-model="selected_template"
+          :items="templates"
+          item-title="name"
+          variant="underlined"
+          return-object
+        />
+
+        <v-btn
+          class="mb-2"
+          prepend-icon="mdi-cached"
+          size="small"
+          color="red"
+          variant="flat"
+          @click="onResetDefaultTemplate"
+        >
+          恢復預設內容
+        </v-btn>
+
         <v-textarea
           label="提詞前綴"
-          v-model="prompt_prefix"
-          :disabled="!modifiable"
+          v-model="selected_template.prompt_prefix"
           rows="3"
           counter
         />
         <v-textarea
           label="提詞後綴"
-          v-model="prompt_postfix"
-          :disabled="!modifiable"
+          v-model="selected_template.prompt_suffix"
           rows="3"
           counter
         />
