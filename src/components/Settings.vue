@@ -10,6 +10,14 @@ import {
   api_deployment,
   api_version,
 } from '@/libs/settings.js';
+
+// upper bound
+const max_token_ub = 2048;
+
+const max_token_rules = [
+  val => val <= max_token_ub || `不能超過 ${max_token_ub}`,
+  val => val >= 0 || '不能低於 0',
+];
 </script>
 
 <template>
@@ -38,7 +46,8 @@ import {
           v-model="max_tokens"
           type="number"
           min="0"
-          max="2048"
+          :max="max_token_ub"
+          :rules="max_token_rules"
           variant="underlined"
         />
 
