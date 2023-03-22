@@ -8,6 +8,13 @@ import vue from '@vitejs/plugin-vue'
 
 const https_cred_path = `${ os.homedir() }/.office-addin-dev-certs`
 
+function loadIfExists(file_name) {
+    const file_path = path.resolve(`${https_cred_path}/${file_name}`);
+    if (!fs.existsSync(file_path))
+        return '';
+    return fs.readFileSync(file_path);
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
@@ -19,9 +26,9 @@ export default defineConfig({
   server: {
     port: 3000,
     https: {
-      key: fs.readFileSync(path.resolve(`${https_cred_path}/localhost.key`)),
-      cert: fs.readFileSync(path.resolve(`${https_cred_path}/localhost.crt`)),
-      ca: fs.readFileSync(path.resolve(`${https_cred_path}/ca.crt`))
+      key: loadIfExists('localhost.key'),
+      cert: loadIfExists('localhost.crt'),
+      ca: loadIfExists('ca.crt')
     }
   }
 })
