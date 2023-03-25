@@ -14,7 +14,7 @@
   <!--Version. Updates from the store only get triggered if there is a version change. -->
   <Version>1.0.0.0</Version>
   <ProviderName>Alan-Kuan</ProviderName>
-  <DefaultLocale>en-US</DefaultLocale>
+  <DefaultLocale>zh-TW</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
   <DisplayName DefaultValue="Azure OpenAI for Word" />
   <Description DefaultValue="a writer helper powered by Azure OpenAI Service"/>
@@ -27,11 +27,11 @@
   <!--<SupportUrl DefaultValue="[Insert the URL of a page that provides support information for the app]" />-->
 
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
-  <AppDomains>
+  <!-- <AppDomains>
     <AppDomain>AppDomain1</AppDomain>
     <AppDomain>AppDomain2</AppDomain>
     <AppDomain>AppDomain3</AppDomain>
-  </AppDomains>
+  </AppDomains> -->
   <!--End Basic Settings. -->
 
   <!--Begin TaskPane Mode integration. This section is used if there are no VersionOverrides or if the Office client version does not support add-in commands. -->
@@ -131,7 +131,7 @@
       <!-- ShortStrings max characters==125. -->
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="Get started with your sample add-in!" />
-        <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group" />
+        <bt:String id="CommandsGroup.Label" DefaultValue="AOAI" />
         <bt:String id="TaskpaneButton.Label" DefaultValue="Azure OpenAI for Word" />
       </bt:ShortStrings>
       <!-- LongStrings max characters==250. -->
