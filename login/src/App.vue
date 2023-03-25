@@ -1,3 +1,7 @@
+<script setup>
+import { signIn } from './auth.js';
+</script>
+
 <template>
   <v-layout full-height>
     <v-container
@@ -18,6 +22,7 @@
       <div class="mt-5">
         <v-btn
           color="blue"
+          @click="signIn"
         >
           登入
         </v-btn>
