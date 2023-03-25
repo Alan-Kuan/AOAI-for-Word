@@ -1,7 +1,7 @@
 {
     "routes": [
         {
-            "route": "/*",
+            "route": "/main",
             "allowedRoles": ["authenticated"]
         }
     ],
