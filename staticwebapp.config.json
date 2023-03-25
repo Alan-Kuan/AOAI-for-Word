@@ -1,12 +1,20 @@
 {
     "routes": [
         {
-            "route": "/login*",
-            "allowedRoles": ["anonymous"]
+            "route": "/",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/index.html",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/main.js",
+            "allowedRoles": ["authenticated"]
         },
         {
             "route": "/*",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": ["anonymous"]
         }
     ],
     "responseOverrides": {

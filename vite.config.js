@@ -37,6 +37,13 @@ export default defineConfig({
                 main: path.resolve(__dirname, 'index.html'),
                 login: path.resolve(__dirname, 'login/index.html'),
                 login_dialog: path.resolve(__dirname, 'login_dialog/index.html'),
+            },
+            output: {
+                entryFileNames: (asset_info) => {
+                    if (asset_info.name === 'main')
+                        return 'main.js';
+                    return '[name]/main.js';
+                },
             }
         }
     }
