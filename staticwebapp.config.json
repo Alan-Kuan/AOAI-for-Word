@@ -1,10 +1,20 @@
 {
     "routes": [
         {
-            "route": "/main",
+            "route": "/login*",
+            "allowedRoles": ["anonymous"]
+        },
+        {
+            "route": "/*",
             "allowedRoles": ["authenticated"]
         }
     ],
+    "responseOverrides": {
+        "401": {
+            "statusCode": 302,
+            "redirect": "/login/index.html"
+        }
+    },
     "auth": {
         "identityProviders": {
             "azureActiveDirectory": {

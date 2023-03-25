@@ -17,18 +17,26 @@ function loadIfExists(file_name) {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+    plugins: [vue()],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
+    },
+    server: {
+        port: 3000,
+        https: {
+            key: loadIfExists('localhost.key'),
+            cert: loadIfExists('localhost.crt'),
+            ca: loadIfExists('ca.crt')
+        }
+    },
+    build: {
+        rollupOptions: {
+            input: {
+                main: resolve(__dirname, 'index.html'),
+                login: resolve(__dirname, 'login/index.html'),
+            }
+        }
     }
-  },
-  server: {
-    port: 3000,
-    https: {
-      key: loadIfExists('localhost.key'),
-      cert: loadIfExists('localhost.crt'),
-      ca: loadIfExists('ca.crt')
-    }
-  }
 })
