@@ -18,6 +18,6 @@ fastify.get('/', (req, res) => {
     res.sendFile('index.html');
 });
 
-fastify.listen({ port: 8080 }, (err, _) => {
+fastify.listen({ port: 80 }, (err, _) => {
     if (err) throw err;
 });

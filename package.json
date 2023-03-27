@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server.js",
+    "start": "node ./server.js",
     "validate": "office-toolbox validate -m manifest.xml",
     "sideload": "office-toolbox sideload -m manifest.xml -a word"
   },
