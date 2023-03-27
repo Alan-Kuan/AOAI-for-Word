@@ -7,7 +7,7 @@ function onLoginMessageReceived(arg) {
 
     const data = JSON.parse(arg.message);
     if (data.ok) {
-        location.href = '/';
+        location.href = `/?token=${data.token}`;
     } else {
         console.log(data.err_msg);
     }
