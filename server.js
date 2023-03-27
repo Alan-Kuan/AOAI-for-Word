@@ -14,6 +14,6 @@ fastify.register(fastify_static, {
     root: path.join(__dirname, 'dist'),
 });
 
-fastify.listen({ port: 80 }, (err, _) => {
+fastify.listen({ port: 8080 }, (err, _) => {
     if (err) throw err;
 });
