@@ -20,7 +20,7 @@ import { PublicClientApplication } from '@azure/msal-browser';
     msal.handleRedirectPromise()
         .then(res => {
             if (res) {
-                const data = { ok: true, token: res.accessToken };
+                const data = { ok: true, token: res.idToken };
                 Office.context.ui.messageParent(JSON.stringify(data));
             } else {
                 msal.loginRedirect();
