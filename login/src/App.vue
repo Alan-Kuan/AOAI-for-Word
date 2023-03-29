@@ -28,7 +28,7 @@ import { signIn } from './auth.js';
         </v-btn>
       </div>
       <div class="mt-5 text-caption text-grey">
-        Microsoft Account Only
+        Microsoft Internal Account Only
       </div>
     </v-container>
   </v-layout>
