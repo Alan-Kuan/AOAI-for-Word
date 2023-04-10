@@ -10,8 +10,10 @@ import { notify } from '@/libs/notify.js';
 import { curr_completion_tokens, curr_prompt_tokens, total_tokens } from '@/libs/token_usage';
 
 export async function complete(prompt, temperature, top_p) {
+    const endpoint = api_endpoint.value.replace(/\/+$/, '');
+
     const req = axios.create({
-        baseURL: `${api_endpoint.value}/openai/deployments/${api_deployment.value}`,
+        baseURL: `${endpoint}/openai/deployments/${api_deployment.value}`,
         headers: {
             'Content-Type': 'application/json',
             'api-key': api_key.value,
