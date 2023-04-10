@@ -40,7 +40,11 @@ export async function complete(prompt, temperature, top_p) {
             return generated_text;
         })
         .catch(err => {
-            notify(err.message);
+            if (err.response.status == 404) {
+                notify(`版本日期為 ${api_version.value} 的模型「${api_deployment.value}」不存在`);
+            } else {
+                notify(err.message);
+            }
             return null;
         });
 }
