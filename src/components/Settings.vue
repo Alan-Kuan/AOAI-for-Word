@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted } from 'vue';
 import FoldableSection from '@/components/FoldableSection.vue';
 import SecretInput from './SecretInput.vue';
 import {
@@ -9,6 +10,8 @@ import {
   api_endpoint,
   api_deployment,
   api_version,
+  loadCredentials,
+  saveCredentials,
 } from '@/libs/settings.js';
 
 // upper bound
@@ -18,6 +21,8 @@ const max_token_rules = [
   val => val <= max_token_ub || `不能超過 ${max_token_ub}`,
   val => val >= 0 || '不能低於 0',
 ];
+
+onMounted(() => loadCredentials());
 </script>
 
 <template>
@@ -86,6 +91,14 @@ const max_token_rules = [
           v-model="api_version"
           variant="underlined"
         />
+
+        <v-btn
+          title="存放於本地儲存空間"
+          color="blue"
+          @click="saveCredentials"
+        >
+          儲存模型連線資訊
+        </v-btn>
       </v-card-text>
     </v-card>
   </FoldableSection>
