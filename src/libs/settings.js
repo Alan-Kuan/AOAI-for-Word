@@ -26,3 +26,15 @@ export function saveCredentials() {
     localStorage.setItem('api_version', api_version.value);
     notify('儲存成功');
 }
+
+export function cleanCredentials() {
+    localStorage.removeItem('api_key');
+    localStorage.removeItem('api_endpoint');
+    localStorage.removeItem('api_deployment');
+    localStorage.removeItem('api_version');
+    api_key.value = '';
+    api_endpoint.value = '';
+    api_deployment.value = '';
+    api_version.value = '';
+    notify('移除成功');
+}

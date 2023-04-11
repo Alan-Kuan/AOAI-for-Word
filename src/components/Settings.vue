@@ -5,12 +5,15 @@ import {
   generate_location,
   generate_mode,
   max_tokens,
+
   api_key,
   api_endpoint,
   api_deployment,
   api_version,
+
   loadCredentials,
   saveCredentials,
+  cleanCredentials
 } from '@/libs/settings.js';
 
 const hide_api_key = ref(true);
@@ -97,13 +100,27 @@ onMounted(() => loadCredentials());
           variant="underlined"
         />
 
-        <v-btn
-          title="存放於本地儲存空間"
-          color="blue"
-          @click="saveCredentials"
-        >
-          儲存模型連線資訊
-        </v-btn>
+        <v-row>
+          <v-col>
+            <v-btn
+              title="存放於本地儲存空間"
+              color="blue"
+              @click="saveCredentials"
+            >
+              儲存模型連線資訊
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              title="清除存放的連線資訊"
+              color="red"
+              variant="outlined"
+              @click="cleanCredentials"
+            >
+              清除
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
   </FoldableSection>
