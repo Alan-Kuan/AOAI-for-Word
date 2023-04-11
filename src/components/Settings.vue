@@ -1,7 +1,6 @@
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import FoldableSection from '@/components/FoldableSection.vue';
-import SecretInput from './SecretInput.vue';
 import {
   generate_location,
   generate_mode,
@@ -13,6 +12,8 @@ import {
   loadCredentials,
   saveCredentials,
 } from '@/libs/settings.js';
+
+const hide_api_key = ref(true);
 
 // upper bound
 const max_token_ub = 2048;
@@ -72,9 +73,13 @@ onMounted(() => loadCredentials());
           </v-btn-toggle>
         </div>
 
-        <SecretInput
+        <v-text-field
           label="API 金鑰"
           v-model="api_key"
+          variant="underlined"
+          :type="hide_api_key ? 'password' : 'text'"
+          :append-icon="hide_api_key ? 'mdi-eye-off' : 'mdi-eye'"
+          @click:append="hide_api_key = !hide_api_key"
         />
         <v-text-field
           label="API 端點"
