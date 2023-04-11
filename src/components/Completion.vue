@@ -101,7 +101,7 @@ function onResetDefaultTemplate() {
           @click="onConvert"
         >
           <v-icon icon="mdi-fountain-pen-tip" />
-          轉換
+          生成
         </v-btn>
       </v-card-text>
     </v-card>
