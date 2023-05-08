@@ -4,10 +4,11 @@ export const show = ref(false);
 export const message = ref('');
 
 export function notify(msg, timeout=3000) {
-    console.log(msg);
     show.value = true;
     message.value = msg;
-    setTimeout(() => show.value = false, timeout);
+    if (timeout >= 0) {
+        setTimeout(() => show.value = false, timeout);
+    }
 }
 
 export function dismiss() {

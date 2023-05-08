@@ -8,6 +8,7 @@ import { show, message, dismiss } from '@/libs/notify.js';
     class="mt-16"
     location="top left"
     transition="slide-x-reverse-transition"
+    timeout="-1"
     close-on-content-click
   >
     {{ message }}
