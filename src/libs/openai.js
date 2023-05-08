@@ -40,11 +40,21 @@ export async function complete(prompt, temperature, top_p) {
             return generated_text;
         })
         .catch(err => {
-            if (err.response.status == 404) {
-                notify(`版本日期為 ${api_version.value} 的模型「${api_deployment.value}」不存在`);
+            const err_res = JSON.parse(err.response.request.responseText);
+            const err_msg = err_res.error.message;
+
+            if (err.response.status === 404) {
+                notify(`版本日期為「${api_version.value}」的模型「${api_deployment.value}」不存在`);
+            } else if (err_msg.startsWith("This model's maximum context length is")) {
+                const limit = err_msg.match(/\d+/)[0];
+                notify(`超過此模型單次請求的 token 數量上限 ${limit}`)
+            } else if (err_msg.includes('have exceeded call rate limit')) {
+                notify('達到此模型每分鐘內的使用量上限');
             } else {
-                notify(err.message);
+                notify(err_msg);
+                console.error(err_res);
             }
+
             return null;
         });
 }

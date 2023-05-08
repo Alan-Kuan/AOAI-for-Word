@@ -18,11 +18,7 @@ import {
 
 const hide_api_key = ref(true);
 
-// upper bound
-const max_token_ub = 2048;
-
 const max_token_rules = [
-  val => val <= max_token_ub || `不能超過 ${max_token_ub}`,
   val => val >= 0 || '不能低於 0',
 ];
 
@@ -55,7 +51,6 @@ onMounted(() => loadCredentials());
           v-model="max_tokens"
           type="number"
           min="0"
-          :max="max_token_ub"
           :rules="max_token_rules"
           variant="underlined"
         />
