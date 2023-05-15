@@ -1,4 +1,4 @@
-import axios from 'axios';
+import 'isomorphic-fetch';
 import {
     max_tokens,
     api_key,
@@ -9,29 +9,33 @@ import {
 import { notify } from '@/libs/notify.js';
 import { curr_completion_tokens, curr_prompt_tokens, total_tokens } from '@/libs/token_usage';
 
-export async function complete(prompt, temperature, top_p) {
+async function post(route, data) {
     const endpoint = api_endpoint.value.replace(/\/+$/, '');
+    const base_url = `${endpoint}/openai/deployments/${api_deployment.value}`;
 
-    const req = axios.create({
-        baseURL: `${endpoint}/openai/deployments/${api_deployment.value}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'api-key': api_key.value,
-        },
-        params: {
-            'api-version': api_version.value,
-        },
-    });
+    return await fetch(`${base_url}${route}?api-version=${api_version.value}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': api_key.value,
+            },
+            body: JSON.stringify(data),
+        });
+}
 
-    return await req.post('/completions', {
+export async function complete(prompt, temperature, top_p) {
+    return await post('/completions', {
             prompt,
             max_tokens: parseInt(max_tokens.value, 10),
             temperature: temperature,
             top_p: top_p,
         })
-        .then(res => {
-            const generated_text = res.data.choices[0].text.replace(/^[\r\n]+/, '');
-            const usage = res.data.usage;
+        .then(res => res.json())
+        .then(data => {
+            if ('error' in data) throw data;
+
+            const generated_text = data.choices[0].text.replace(/^[\r\n]+/, '');
+            const usage = data.usage;
 
             curr_completion_tokens.value = usage.completion_tokens;
             curr_prompt_tokens.value = usage.prompt_tokens;
@@ -39,11 +43,10 @@ export async function complete(prompt, temperature, top_p) {
 
             return generated_text;
         })
-        .catch(err => {
-            const err_res = JSON.parse(err.response.request.responseText);
-            const err_msg = err_res.error.message;
+        .catch(data => {
+            const err_msg = data.error.message;
 
-            if (err.response.status === 404) {
+            if (data.error.code === '404') {
                 notify(`版本日期為「${api_version.value}」的模型「${api_deployment.value}」不存在`, 5000);
             } else if (err_msg.startsWith("This model's maximum context length is")) {
                 const limit = err_msg.match(/\d+/)[0];
@@ -52,7 +55,7 @@ export async function complete(prompt, temperature, top_p) {
                 notify('達到此模型每分鐘內的使用量上限');
             } else {
                 notify(err_msg, -1);
-                console.error(err_res);
+                console.error(data);
             }
 
             return null;
