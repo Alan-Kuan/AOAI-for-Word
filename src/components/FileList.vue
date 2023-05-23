@@ -2,18 +2,26 @@
 import { ref, onMounted } from 'vue';
 import { getWordFiles } from '@/libs/onedrive';
 
+const loading = ref(true);
 const files = ref([]);
+const has_next = ref(false);
 
 const emit = defineEmits(['select']);
 
-onMounted(async () => {
-  files.value = await getWordFiles();
-});
+async function getFiles() {
+  loading.value = true;
+  const res = await getWordFiles(5);
+  files.value = files.value.concat(res.entries);
+  has_next.value = res.has_next;
+  loading.value = false;
+}
+
+onMounted(getFiles);
 </script>
 
 <template>
   <v-progress-linear
-    v-if="files.length === 0"
+    v-if="loading"
     color="#555555"
     indeterminate
   />
@@ -33,4 +41,14 @@ onMounted(async () => {
       </template>
     </v-list-item>
   </v-list>
+
+  <v-btn
+    v-if="files.length > 0 && has_next"
+    class="w-100"
+    color="blue"
+    variant="text"
+    @click="getFiles"
+  >
+    載入更多
+  </v-btn>
 </template>
