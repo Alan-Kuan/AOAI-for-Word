@@ -10,14 +10,23 @@ import TokenUsage from '@/components/TokenUsage.vue';
 <template>
   <v-layout full-height>
     <v-main>
-      <Notification />
-      <Settings />
-      <Completion />
-      <OneDrive />
-      <About />
+      <div class="sections">
+        <Notification />
+        <Settings />
+        <Completion />
+        <OneDrive />
+        <About />
+      </div>
     </v-main>
     <v-footer app>
       <TokenUsage />
     </v-footer>
   </v-layout>
 </template>
+
+<style scoped>
+.sections {
+  /* should compensate the space that the footer has taken */
+  padding-bottom: 5rem;
+}
+</style>
