@@ -2,6 +2,7 @@
 import Notification from '@/components/Notification.vue';
 import Settings from '@/components/Settings.vue';
 import Completion from '@/components/Completion.vue';
+import OneDrive from '@/components/OneDrive.vue';
 import About from '@/components/About.vue';
 import TokenUsage from '@/components/TokenUsage.vue';
 </script>
@@ -12,6 +13,7 @@ import TokenUsage from '@/components/TokenUsage.vue';
       <Notification />
       <Settings />
       <Completion />
+      <OneDrive />
       <About />
     </v-main>
     <v-footer app>

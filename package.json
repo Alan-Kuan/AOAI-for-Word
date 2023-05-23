@@ -14,6 +14,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.34.0",
     "@mdi/font": "^7.1.96",
+    "@microsoft/microsoft-graph-client": "^3.0.5",
     "isomorphic-fetch": "^3.0.0",
     "vue": "^3.2.47",
     "vuetify": "^3.1.7"

@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@azure/msal-browser': ^2.34.0
   '@mdi/font': ^7.1.96
+  '@microsoft/microsoft-graph-client': ^3.0.5
   '@vitejs/plugin-vue': ^4.0.0
   isomorphic-fetch: ^3.0.0
   office-toolbox: ^0.3.0
@@ -13,6 +14,7 @@ specifiers:
 dependencies:
   '@azure/msal-browser': 2.34.0
   '@mdi/font': 7.1.96
+  '@microsoft/microsoft-graph-client': 3.0.5_@azure+msal-browser@2.34.0
   isomorphic-fetch: 3.0.0
   vue: 3.2.47
   vuetify: 3.1.7_vue@3.2.47
@@ -50,6 +52,13 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.21.2
+
+  /@babel/runtime/7.21.5:
+    resolution: {integrity: sha512-8jI69toZqqcsnqGGqwGS4Qb1VwLOEp4hz+CXPywcvjs60u3B4Pom/U/7rm4W8tMOYEB+E9wgD0mW1l3r8qlI9Q==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /@babel/types/7.21.2:
     resolution: {integrity: sha512-3wRZSs7jiFaB8AjxiiD+VqN5DTG2iRvJGQ+qYFrs/654lg6kGTQWIOFjlBo5RaXuAZjBmP3+OQH4dmhqiiyYxw==}
@@ -259,6 +268,29 @@ packages:
 
   /@mdi/font/7.1.96:
     resolution: {integrity: sha512-Imag6npmfkBDi2Ze2jiZVAPTDIKLxhz2Sx82xJ2zctyAU5LYJejLI5ChnDwiD9bMkQfVuzEsI98Q8toHyC+HCg==}
+    dev: false
+
+  /@microsoft/microsoft-graph-client/3.0.5_@azure+msal-browser@2.34.0:
+    resolution: {integrity: sha512-xQADFNLUhE78RzYadFZtOmy/5wBZenSZhVK193m40MTDC5hl1aYMQO1QOJApnKga8WcvMCDCU10taRhuXTOz5w==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@azure/identity': '*'
+      '@azure/msal-browser': '*'
+      buffer: '*'
+      stream-browserify: '*'
+    peerDependenciesMeta:
+      '@azure/identity':
+        optional: true
+      '@azure/msal-browser':
+        optional: true
+      buffer:
+        optional: true
+      stream-browserify:
+        optional: true
+    dependencies:
+      '@azure/msal-browser': 2.34.0
+      '@babel/runtime': 7.21.5
+      tslib: 2.5.0
     dev: false
 
   /@vitejs/plugin-vue/4.0.0_vite@4.1.4+vue@3.2.47:
@@ -1006,6 +1038,10 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
+  /regenerator-runtime/0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+    dev: false
+
   /request-promise-core/1.1.4_request@2.88.2:
     resolution: {integrity: sha512-TTbAfBBRdWD7aNNOoVOBH4pN/KigV6LyapYNNlAPA8JwbovRti1E88m3sYAwsLi5ryhPKsE9APwnjFTgdUjTpw==}
     engines: {node: '>=0.10.0'}
@@ -1246,6 +1282,10 @@ packages:
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
+
+  /tslib/2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
+    dev: false
 
   /tunnel-agent/0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}

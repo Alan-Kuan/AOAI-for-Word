@@ -8,11 +8,10 @@ import { PublicClientApplication } from '@azure/msal-browser';
             clientId: import.meta.env.VITE_CLIENT_ID,
             authority: import.meta.env.VITE_AUTHORITY,
             redirectUri: import.meta.env.VITE_REDIRECT_URL,
-        },
-        cache: {
-            cacheLocation: 'sessionStorage',
-            storeAuthStateInCookie: false,
-        },
+        }
+    };
+    const login_req = {
+        scopes: [ 'Files.Read' ]
     };
 
     const msal = new PublicClientApplication(config);
@@ -20,10 +19,14 @@ import { PublicClientApplication } from '@azure/msal-browser';
     msal.handleRedirectPromise()
         .then(res => {
             if (res) {
-                const data = { ok: true, token: res.idToken };
+                const data = {
+                    ok: true,
+                    id_token: res.idToken,
+                    access_token: res.accessToken
+                };
                 Office.context.ui.messageParent(JSON.stringify(data));
             } else {
-                msal.loginRedirect();
+                msal.loginRedirect(login_req);
             }
         })
         .catch(err => {
