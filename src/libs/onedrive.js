@@ -1,5 +1,6 @@
 import 'isomorphic-fetch';
-import { Client, PageIterator } from '@microsoft/microsoft-graph-client';
+import { Client } from '@microsoft/microsoft-graph-client';
+import { notify } from '@/libs/notify.js';
 
 const authProvider = (callback) => {
     const access_token = localStorage.getItem('access_token');
@@ -20,7 +21,25 @@ export async function getWordFiles(limit=5) {
         .select('name')
         .select('file')
         .top(limit)
-        .get();
+        .get()
+        .catch(err => {
+            const err_msg = err.message;
+            if (err_msg === 'Access token has expired or is not yet valid.') {
+                notify('請重新登入以瀏覽 OneDrive 內容');
+            } else {
+                console.error(err);
+            }
+            return null;
+        });
+    
+    if (!res) {
+        return {
+            error: true,
+            has_next: false,
+            entries: []
+        };
+    }
+
     const entries = res.value
         .filter(isDocx)
         .map(entry => {
@@ -31,6 +50,9 @@ export async function getWordFiles(limit=5) {
         });
 
     next_link = res['@odata.nextLink'] ?? null;
-
-    return { has_next: next_link !== null, entries };
+    return {
+        error: false,
+        has_next: next_link !== null,
+        entries
+    };
 }

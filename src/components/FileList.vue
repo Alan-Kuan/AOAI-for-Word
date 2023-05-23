@@ -5,14 +5,18 @@ import { getWordFiles } from '@/libs/onedrive';
 const loading = ref(true);
 const files = ref([]);
 const has_next = ref(false);
+const error = ref(false);
 
 const emit = defineEmits(['select']);
 
 async function getFiles() {
   loading.value = true;
+
   const res = await getWordFiles(5);
   files.value = files.value.concat(res.entries);
   has_next.value = res.has_next;
+  error.value = res.error;
+
   loading.value = false;
 }
 
@@ -24,6 +28,17 @@ onMounted(getFiles);
     v-if="loading"
     color="#555555"
     indeterminate
+  />
+
+  <v-alert
+    v-if="error"
+    class="mt-2 mx-2"
+    text="發生錯誤，請嘗試重新登入"
+    type="error"
+    border="top"
+    border-color="red"
+    density="compact"
+    variant="outlined"
   />
 
   <v-list>
