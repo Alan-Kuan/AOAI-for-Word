@@ -5,9 +5,6 @@ import FileList from '@/components/FileList.vue';
 
 <template>
   <FoldableSection title="OneDrive" :default_expanded="false">
-    <!-- NOTE: tmp -->
-    <a href="/login/index.html">login</a>
-
     <FileList />
   </FoldableSection>
 </template>
