@@ -1,18 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getWordFiles } from '@/libs/onedrive';
+import { getWordFiles, getContent } from '@/libs/onedrive';
 
 const loading = ref(true);
 const files = ref([]);
 const has_next = ref(false);
 const error = ref(false);
 
-const emit = defineEmits(['select']);
-
-async function getFiles() {
+async function getFiles(reload=false) {
   loading.value = true;
 
-  const res = await getWordFiles(5);
+  const res = await getWordFiles(5, reload);
+  if (reload) files.value = [];
   files.value = files.value.concat(res.entries);
   has_next.value = res.has_next;
   error.value = res.error;
@@ -20,7 +19,11 @@ async function getFiles() {
   loading.value = false;
 }
 
-onMounted(getFiles);
+async function onFileSelected(id) {
+  const content = await getContent(id);
+}
+
+onMounted(() => getFiles());
 </script>
 
 <template>
@@ -41,13 +44,22 @@ onMounted(getFiles);
     variant="outlined"
   />
 
+  <v-btn
+    append-icon="mdi-reload"
+    size="small"
+    variant="flat"
+    @click="getFiles(true)"
+  >
+    重新整理
+  </v-btn>
+
   <v-list>
     <v-list-item
       v-for="file in files"
       :key="file.id"
       :value="file.id"
       :title="file.name"
-      @click="emit('select', file.id)"
+      @click="onFileSelected(file.id)"
     >
       <template v-slot:prepend>
         <v-avatar color="blue">
@@ -62,7 +74,7 @@ onMounted(getFiles);
     class="w-100"
     color="blue"
     variant="text"
-    @click="getFiles"
+    @click="getFiles()"
   >
     載入更多
   </v-btn>

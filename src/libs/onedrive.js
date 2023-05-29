@@ -15,7 +15,9 @@ function isDocx(entry) {
 
 let next_link = null;
 
-export async function getWordFiles(limit=5) {
+export async function getWordFiles(limit=5, reload=false) {
+    if (reload) next_link = null;
+
     const path = next_link ?? "/me/drive/root/search(q='.docx')";
     const res = await client.api(path)
         .select('id')
