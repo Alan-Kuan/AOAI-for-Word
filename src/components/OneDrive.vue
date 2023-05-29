@@ -1,9 +1,10 @@
 <script setup>
 import FoldableSection from '@/components/FoldableSection.vue';
 import FileList from '@/components/FileList.vue';
+import { getContent } from '@/libs/onedrive';
 
-function onFileSelected(id) {
-  console.log(id)
+async function onFileSelected(id) {
+  const content = await getContent(id);
 }
 </script>
 
