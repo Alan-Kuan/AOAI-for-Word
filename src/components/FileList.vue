@@ -7,6 +7,8 @@ const files = ref([]);
 const has_next = ref(false);
 const error = ref(false);
 
+const emit = defineEmits(['select']);
+
 async function getFiles(reload=false) {
   loading.value = true;
 
@@ -23,6 +25,7 @@ async function onFileSelected(id) {
   loading.value = true;
 
   const content = await getContent(id);
+  emit('select', content);
 
   loading.value = false;
 }
@@ -37,6 +40,15 @@ onMounted(() => getFiles());
     indeterminate
   />
 
+  <v-btn
+    append-icon="mdi-reload"
+    size="small"
+    variant="flat"
+    @click="getFiles(true)"
+  >
+    重新整理
+  </v-btn>
+
   <v-alert
     v-if="error"
     class="mt-2 mx-2"
@@ -47,15 +59,6 @@ onMounted(() => getFiles());
     density="compact"
     variant="outlined"
   />
-
-  <v-btn
-    append-icon="mdi-reload"
-    size="small"
-    variant="flat"
-    @click="getFiles(true)"
-  >
-    重新整理
-  </v-btn>
 
   <v-list>
     <v-list-item
