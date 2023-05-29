@@ -20,7 +20,11 @@ async function getFiles(reload=false) {
 }
 
 async function onFileSelected(id) {
+  loading.value = true;
+
   const content = await getContent(id);
+
+  loading.value = false;
 }
 
 onMounted(() => getFiles());
