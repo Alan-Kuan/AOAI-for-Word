@@ -5,8 +5,11 @@ import { notify } from '@/libs/notify.js';
 import { generate_location, generate_mode } from '@/libs/settings.js';
 import { templates } from '@/templates/completion.js';
 import FoldableSection from '@/components/FoldableSection.vue';
+import FileList from '@/components/FileList.vue';
 
 const selected_template = ref(templates[0]);
+const source = ref(0);
+const selected_content = ref('');
 const inferencing = ref(false);
 
 onMounted(() => {
@@ -23,9 +26,19 @@ async function onConvert() {
     range.load({ text: true, isEmpty: true })
     await ctx.sync();
 
-    if (range.isEmpty) {
-      notify('沒有選取任何文字');
-      return;
+    // from selection
+    if (source.value === 0) {
+      if (range.isEmpty) {
+        notify('沒有選取任何文字');
+        return;
+      }
+    }
+    // from onedrive
+    else if (source.value === 1) {
+      if (generate_location.value !== 3 && range.isEmpty) {
+        notify('選擇的生成位置要求選取範圍');
+        return;
+      }
     }
 
     inferencing.value = true;
@@ -41,13 +54,21 @@ async function onConvert() {
 
     if (!converted_text) return;
 
-    const insert_loc = generate_location.value === 0 ?
-                       Word.InsertLocation.replace :
-                       Word.InsertLocation.end;
-    if (generate_location.value === 2) {
-      converted_text = '\n' + converted_text;
+    switch (generate_location.value) {
+    case 0:  // replace
+      range.insertText(converted_text, Word.InsertLocation.replace);
+      break;
+    case 1:  // continue
+      range.insertText(converted_text, Word.InsertLocation.end);
+      break;
+    case 2:  // next line
+      range.insertText('\n' + converted_text, Word.InsertLocation.end);
+      break;
+    case 3:  // end of file
+      ctx.document.body.insertText('\n' + converted_text, Word.InsertLocation.end);
+      break;
     }
-    range.insertText(converted_text, insert_loc);
+
     await ctx.sync();
   });
 }
@@ -71,8 +92,36 @@ function onResetDefaultTemplate() {
           return-object
         />
 
-        <v-btn
+        <div>
+          <v-label class="text-caption" text="文字來源" />
+        </div>
+        <div class="mb-3">
+          <v-btn-toggle
+            v-model="source"
+            :mandatory="true"
+            color="blue"
+            variant="outlined"
+            divided
+          >
+            <v-btn>選取範圍</v-btn>
+            <v-btn class="text-none">OneDrive</v-btn>
+          </v-btn-toggle>
+        </div>
+
+        <div
+          v-if="source === 1"
           class="mb-2"
+        >
+          <FileList v-model:selected_content="selected_content" />
+        </div>
+
+
+        <div>
+          <v-label class="text-caption" text="提詞前綴/後綴" />
+        </div>
+
+        <v-btn
+          class="mt-1 mb-2"
           prepend-icon="mdi-cached"
           size="small"
           color="red"

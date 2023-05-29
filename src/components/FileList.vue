@@ -7,7 +7,8 @@ const files = ref([]);
 const has_next = ref(false);
 const error = ref(false);
 
-const emit = defineEmits(['select']);
+const prop = defineProps(['selected_content']);
+const emit = defineEmits(['update:selected_content']);
 
 async function getFiles(reload=false) {
   loading.value = true;
@@ -25,7 +26,7 @@ async function onFileSelected(id) {
   loading.value = true;
 
   const content = await getContent(id);
-  emit('select', content);
+  emit('update:selected_content', content);
 
   loading.value = false;
 }

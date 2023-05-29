@@ -42,7 +42,8 @@ onMounted(() => loadCredentials());
           >
             <v-btn>取代</v-btn>
             <v-btn>接續</v-btn>
-            <v-btn>插入下行</v-btn>
+            <v-btn>下行</v-btn>
+            <v-btn>檔尾</v-btn>
           </v-btn-toggle>
         </div>
 
