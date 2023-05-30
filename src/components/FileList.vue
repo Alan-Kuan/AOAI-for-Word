@@ -6,6 +6,7 @@ const loading = ref(true);
 const files = ref([]);
 const has_next = ref(false);
 const error = ref(false);
+const selected_id = ref(null);
 
 const prop = defineProps(['selected_content']);
 const emit = defineEmits(['update:selected_content']);
@@ -27,6 +28,7 @@ async function onFileSelected(id) {
 
   const content = await getContent(id);
   emit('update:selected_content', content);
+  selected_id.value = id;
 
   loading.value = false;
 }
@@ -70,8 +72,10 @@ onMounted(() => getFiles());
       @click="onFileSelected(file.id)"
     >
       <template v-slot:prepend>
-        <v-avatar color="blue">
-          <v-icon color="white">mdi-file-word</v-icon>
+        <v-avatar :color="file.id === selected_id ? 'green' : 'blue'">
+          <v-icon color="white">
+            {{ file.id === selected_id ? 'mdi-check' : 'mdi-file-word' }}
+          </v-icon>
         </v-avatar>
       </template>
     </v-list-item>
