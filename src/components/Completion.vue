@@ -26,12 +26,15 @@ async function onConvert() {
     range.load({ text: true, isEmpty: true })
     await ctx.sync();
 
+    let source_text;
+
     // from selection
     if (source.value === 0) {
       if (range.isEmpty) {
         notify('沒有選取任何文字');
         return;
       }
+      source_text = range.text;
     }
     // from onedrive
     else if (source.value === 1) {
@@ -39,14 +42,15 @@ async function onConvert() {
         notify('選擇的生成位置要求選取範圍');
         return;
       }
+      source_text = selected_content.value;
     }
 
     inferencing.value = true;
     const prefix = selected_template.value.prompt_prefix;
     const suffix = selected_template.value.prompt_suffix;
     const params = selected_template.value.params[generate_mode.value];
-    let converted_text = await openai.complete(
-      prefix + range.text + suffix,
+    const converted_text = await openai.complete(
+      prefix + source_text + suffix,
       params.temperature,
       params.top_p,
     );
