@@ -2,18 +2,13 @@ import 'isomorphic-fetch';
 import {
     max_tokens,
     api_key,
-    api_endpoint,
-    api_deployment,
-    api_version,
+    api_endpoint_completion,
 } from '@/libs/settings.js';
 import { notify } from '@/libs/notify.js';
 import { curr_completion_tokens, curr_prompt_tokens, total_tokens } from '@/libs/token_usage';
 
-async function post(route, data) {
-    const endpoint = api_endpoint.value.replace(/\/+$/, '');
-    const base_url = `${endpoint}/openai/deployments/${api_deployment.value}`;
-
-    return await fetch(`${base_url}${route}?api-version=${api_version.value}`, {
+async function post(endpoint, data) {
+    return await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,7 +19,7 @@ async function post(route, data) {
 }
 
 export async function complete(prompt, temperature, top_p) {
-    return await post('/completions', {
+    return await post(api_endpoint_completion.value, {
             prompt,
             max_tokens: parseInt(max_tokens.value, 10),
             temperature: temperature,

@@ -7,9 +7,7 @@ import {
   max_tokens,
 
   api_key,
-  api_endpoint,
-  api_deployment,
-  api_version,
+  api_endpoint_completion,
 
   loadCredentials,
   saveCredentials,
@@ -73,27 +71,17 @@ onMounted(() => loadCredentials());
         </div>
 
         <v-text-field
+          label="Completion API 端點"
+          v-model="api_endpoint_completion"
+          variant="underlined"
+        />
+        <v-text-field
           label="API 金鑰"
           v-model="api_key"
           variant="underlined"
           :type="hide_api_key ? 'password' : 'text'"
           :append-icon="hide_api_key ? 'mdi-eye-off' : 'mdi-eye'"
           @click:append="hide_api_key = !hide_api_key"
-        />
-        <v-text-field
-          label="API 端點"
-          v-model="api_endpoint"
-          variant="underlined"
-        />
-        <v-text-field
-          label="部署模型名稱"
-          v-model="api_deployment"
-          variant="underlined"
-        />
-        <v-text-field
-          label="部署模型版本 (日期)"
-          v-model="api_version"
-          variant="underlined"
         />
 
         <v-row>

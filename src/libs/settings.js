@@ -7,34 +7,39 @@ export const generate_mode = ref(0);
 export const max_tokens = ref('1000');
 
 export const api_key = ref('');
-export const api_endpoint = ref('');
-export const api_deployment = ref('');
-export const api_version = ref('');
+export const api_endpoint_completion = ref('');
 
 export function loadCredentials() {
-    const filter = (x) => x === null ? '' : x;
-    api_key.value = filter(localStorage.getItem('api_key'));
-    api_endpoint.value = filter(localStorage.getItem('api_endpoint'));
-    api_deployment.value = filter(localStorage.getItem('api_deployment'));
-    api_version.value = filter(localStorage.getItem('api_version'));
+    api_key.value = localStorage.getItem('api_key') ?? '';
+    api_endpoint_completion.value = localStorage.getItem('api_endpoint_completion') ?? '';
+
+    // NOTE: migrate old config into new one
+    //       plan to be removed in next major update
+    const api_endpoint = localStorage.getItem('api_endpoint');
+    if (api_endpoint) {
+        const api_deployment = localStorage.getItem('api_deployment');
+        const api_version = localStorage.getItem('api_version');
+        const endpoint = api_endpoint.replace(/\/+$/, '');
+        const base_url = `${endpoint}/openai/deployments/${api_deployment}?api-version=${api_version}`;
+        api_endpoint_completion.value = base_url;
+        localStorage.setItem('api_endpoint_completion', base_url);
+
+        localStorage.removeItem('api_endpoint');
+        localStorage.removeItem('api_deployment');
+        localStorage.removeItem('api_version');
+    }
 }
 
 export function saveCredentials() {
     localStorage.setItem('api_key', api_key.value);
-    localStorage.setItem('api_endpoint', api_endpoint.value);
-    localStorage.setItem('api_deployment', api_deployment.value);
-    localStorage.setItem('api_version', api_version.value);
+    localStorage.setItem('api_endpoint_completion', api_endpoint_completion.value);
     notify('儲存成功');
 }
 
 export function cleanCredentials() {
     localStorage.removeItem('api_key');
-    localStorage.removeItem('api_endpoint');
-    localStorage.removeItem('api_deployment');
-    localStorage.removeItem('api_version');
+    localStorage.removeItem('api_endpoint_completion');
     api_key.value = '';
-    api_endpoint.value = '';
-    api_deployment.value = '';
-    api_version.value = '';
+    api_endpoint_completion.value = '';
     notify('移除成功');
 }
