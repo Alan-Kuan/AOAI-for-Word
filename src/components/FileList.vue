@@ -1,11 +1,11 @@
 <script setup>
-const prop = defineProps([
-  'loading',
-  'error',
-  'has_next',
-  'files',
-  'selected',
-]);
+const prop = defineProps({
+  loading: { type: Boolean, default: false },
+  error: { type: Boolean, default: false },
+  has_next: { type: Boolean, default: false },
+  files: { type: Array, required: true },
+  selected: { type: String, required: true },
+});
 
 const emit = defineEmits([
   'reload',
