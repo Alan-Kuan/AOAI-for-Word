@@ -1,39 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getWordFiles, getContent } from '@/libs/onedrive';
+const prop = defineProps([
+  'loading',
+  'error',
+  'has_next',
+  'files',
+  'selected',
+]);
 
-const loading = ref(true);
-const files = ref([]);
-const has_next = ref(false);
-const error = ref(false);
-const selected_id = ref(null);
-
-const prop = defineProps(['selected_content']);
-const emit = defineEmits(['update:selected_content']);
-
-async function getFiles(reload=false) {
-  loading.value = true;
-
-  const res = await getWordFiles(5, reload);
-  if (reload) files.value = [];
-  files.value = files.value.concat(res.entries);
-  has_next.value = res.has_next;
-  error.value = res.error;
-
-  loading.value = false;
-}
-
-async function onFileSelected(id) {
-  loading.value = true;
-
-  const content = await getContent(id);
-  emit('update:selected_content', content);
-  selected_id.value = id;
-
-  loading.value = false;
-}
-
-onMounted(() => getFiles());
+const emit = defineEmits([
+  'reload',
+  'load_more',
+  'update:selected',
+]);
 </script>
 
 <template>
@@ -47,7 +25,7 @@ onMounted(() => getFiles());
     append-icon="mdi-reload"
     size="small"
     variant="flat"
-    @click="getFiles(true)"
+    @click="$emit('reload')"
   >
     重新整理
   </v-btn>
@@ -69,12 +47,12 @@ onMounted(() => getFiles());
       :key="file.id"
       :value="file.id"
       :title="file.name"
-      @click="onFileSelected(file.id)"
+      @click="$emit('update:selected', file.id)"
     >
       <template v-slot:prepend>
-        <v-avatar :color="file.id === selected_id ? 'green' : 'blue'">
+        <v-avatar :color="file.id === selected ? 'green' : 'blue'">
           <v-icon color="white">
-            {{ file.id === selected_id ? 'mdi-check' : 'mdi-file-word' }}
+            {{ file.id === selected ? 'mdi-check' : 'mdi-file-word' }}
           </v-icon>
         </v-avatar>
       </template>
@@ -86,7 +64,7 @@ onMounted(() => getFiles());
     class="w-100"
     color="blue"
     variant="text"
-    @click="getFiles()"
+    @click="$emit('load_more')"
   >
     載入更多
   </v-btn>

@@ -3,21 +3,41 @@ import { ref, onMounted } from 'vue';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
 import { generate_location, generate_mode } from '@/libs/settings.js';
+import { getWordFiles, getContent } from '@/libs/onedrive';
 import { templates } from '@/templates/completion.js';
+
 import FoldableSection from '@/components/FoldableSection.vue';
 import FileList from '@/components/FileList.vue';
 
 const selected_template = ref(templates[0]);
 const source = ref(0);
-const selected_content = ref('');
-const inferencing = ref(false);
+const generating = ref(false);
 
-onMounted(() => {
-  for (let template of templates) {
-    template.prompt_prefix = ref(template.default_prompt_prefix);
-    template.prompt_suffix = ref(template.default_prompt_suffix);
-  }
-});
+// onedrive
+const loading = ref(false);
+const error = ref(false);
+const has_next = ref(false);
+const files = ref([]);
+const selected_file_id = ref('');
+
+async function getFiles(reload=false) {
+  loading.value = true;
+
+  const res = await getWordFiles(5, reload);
+  if (reload) files.value = [];
+  files.value = files.value.concat(res.entries);
+  error.value = res.error;
+  has_next.value = res.has_next;
+
+  loading.value = false;
+}
+
+async function getSelectedContent() {
+  loading.value = true;
+  const content = await getContent(selected_file_id.value);
+  loading.value = false;
+  return content;
+}
 
 async function onConvert() {
   await Word.run(async ctx => {
@@ -42,10 +62,11 @@ async function onConvert() {
         notify('選擇的生成位置要求選取範圍');
         return;
       }
-      source_text = selected_content.value;
+      generating.value = true;
+      source_text = await getSelectedContent();
     }
 
-    inferencing.value = true;
+    generating.value = true;
     const prefix = selected_template.value.prompt_prefix;
     const suffix = selected_template.value.prompt_suffix;
     const params = selected_template.value.params[generate_mode.value];
@@ -54,7 +75,7 @@ async function onConvert() {
       params.temperature,
       params.top_p,
     );
-    inferencing.value = false;
+    generating.value = false;
 
     if (!converted_text) return;
 
@@ -81,6 +102,15 @@ function onResetDefaultTemplate() {
   selected_template.value.prompt_prefix = selected_template.value.default_prompt_prefix;
   selected_template.value.prompt_suffix = selected_template.value.default_prompt_suffix;
 }
+
+onMounted(() => {
+  for (let template of templates) {
+    template.prompt_prefix = ref(template.default_prompt_prefix);
+    template.prompt_suffix = ref(template.default_prompt_suffix);
+  }
+
+  getFiles();
+});
 </script>
 
 <template>
@@ -116,7 +146,15 @@ function onResetDefaultTemplate() {
           v-if="source === 1"
           class="mb-2"
         >
-          <FileList v-model:selected_content="selected_content" />
+          <FileList
+            :loading="loading"
+            :error="error"
+            :has_next="has_next"
+            :files="files"
+            v-model:selected="selected_file_id"
+            @reload="getFiles(true)"
+            @load_more="getFiles()"
+          />
         </div>
 
 
@@ -150,7 +188,7 @@ function onResetDefaultTemplate() {
         <v-btn
           class="w-100"
           color="blue"
-          :loading="inferencing"
+          :loading="generating"
           @click="onConvert"
         >
           <v-icon icon="mdi-fountain-pen-tip" />
