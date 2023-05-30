@@ -62,6 +62,10 @@ async function onConvert() {
         notify('選擇的生成位置要求選取範圍');
         return;
       }
+      if (!selected_file_id.value) {
+        notify('沒有選擇任何檔案');
+        return;
+      }
       generating.value = true;
       source_text = await getSelectedContent();
     }
