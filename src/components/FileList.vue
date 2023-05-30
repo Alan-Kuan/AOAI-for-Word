@@ -41,31 +41,37 @@ const emit = defineEmits([
     variant="outlined"
   />
 
-  <v-list>
-    <v-list-item
-      v-for="file in files"
-      :key="file.id"
-      :value="file.id"
-      :title="file.name"
-      @click="$emit('update:selected', file.id)"
-    >
-      <template v-slot:prepend>
-        <v-avatar :color="file.id === selected ? 'green' : 'blue'">
-          <v-icon color="white">
-            {{ file.id === selected ? 'mdi-check' : 'mdi-file-word' }}
-          </v-icon>
-        </v-avatar>
-      </template>
-    </v-list-item>
-  </v-list>
-
-  <v-btn
-    v-if="files.length > 0 && has_next"
-    class="w-100"
-    color="blue"
-    variant="text"
-    @click="$emit('load_more')"
+  <v-card
+    class="overflow-y-auto"
+    height="12rem"
+    variant="flat"
   >
-    載入更多
-  </v-btn>
+    <v-list>
+      <v-list-item
+        v-for="file in files"
+        :key="file.id"
+        :value="file.id"
+        :title="file.name"
+        @click="$emit('update:selected', file.id)"
+      >
+        <template v-slot:prepend>
+          <v-avatar :color="file.id === selected ? 'green' : 'blue'">
+            <v-icon color="white">
+              {{ file.id === selected ? 'mdi-check' : 'mdi-file-word' }}
+            </v-icon>
+          </v-avatar>
+        </template>
+      </v-list-item>
+    </v-list>
+
+    <v-btn
+      v-if="files.length > 0 && has_next"
+      class="w-100"
+      color="blue"
+      variant="text"
+      @click="$emit('load_more')"
+    >
+      載入更多
+    </v-btn>
+  </v-card>
 </template>
