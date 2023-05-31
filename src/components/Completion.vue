@@ -9,6 +9,7 @@ import { templates } from '@/templates/completion.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 import FileList from '@/components/FileList.vue';
 
+
 const selected_template = ref(templates[0]);
 const source = ref(0);
 const generating = ref(false);
@@ -19,11 +20,19 @@ const error = ref(false);
 const has_next = ref(false);
 const files = ref([]);
 const selected_file_id = ref('');
+const query_filename = ref('');
+
+
+function onResetDefaultTemplate() {
+  selected_template.value.prompt_prefix = selected_template.value.default_prompt_prefix;
+  selected_template.value.prompt_suffix = selected_template.value.default_prompt_suffix;
+}
+
 
 async function getFiles(reload=false) {
   loading.value = true;
 
-  const res = await getWordFiles(5, reload);
+  const res = await getWordFiles(5, query_filename.value, reload);
   if (reload) files.value = [];
   files.value = files.value.concat(res.entries);
   error.value = res.error;
@@ -32,12 +41,14 @@ async function getFiles(reload=false) {
   loading.value = false;
 }
 
+
 async function getSelectedContent() {
   loading.value = true;
   const content = await getContent(selected_file_id.value);
   loading.value = false;
   return content;
 }
+
 
 async function onConvert() {
   await Word.run(async ctx => {
@@ -102,10 +113,6 @@ async function onConvert() {
   });
 }
 
-function onResetDefaultTemplate() {
-  selected_template.value.prompt_prefix = selected_template.value.default_prompt_prefix;
-  selected_template.value.prompt_suffix = selected_template.value.default_prompt_suffix;
-}
 
 onMounted(() => {
   for (let template of templates) {
@@ -150,6 +157,14 @@ onMounted(() => {
           v-if="source === 1"
           class="mb-2"
         >
+          <v-form @submit.prevent="getFiles(true)">
+            <v-text-field
+              v-model="query_filename"
+              prepend-inner-icon="mdi-magnify"
+              density="compact"
+              variant="outlined"
+            />
+          </v-form>
           <FileList
             :loading="loading"
             :error="error"

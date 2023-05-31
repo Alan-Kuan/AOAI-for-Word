@@ -11,7 +11,7 @@ const client = Client.init({ authProvider });
 
 let curr_entry = 0;
 
-export async function getWordFiles(limit=5, reload=false) {
+export async function getWordFiles(limit=5, query_filename, reload=false) {
     if (reload) curr_entry = 0;
 
     const res = await client.api('/search/query')
@@ -20,7 +20,7 @@ export async function getWordFiles(limit=5, reload=false) {
                 {
                     entityTypes: [ 'driveItem' ],
                     query: {
-                        queryString: 'filetype:docx'
+                        queryString: `${query_filename} filetype:docx`
                     },
                     fields: [
                         'id',
