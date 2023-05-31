@@ -42,7 +42,7 @@ export async function complete(prompt, temperature, top_p) {
             const err_msg = data.error.message;
 
             if (data.error.code === '404') {
-                notify(`版本日期為「${api_version.value}」的模型「${api_deployment.value}」不存在`, 5000);
+                notify(`未知的 API 端點`, 5000);
             } else if (err_msg.startsWith("This model's maximum context length is")) {
                 const limit = err_msg.match(/\d+/)[0];
                 notify(`超過此模型單次請求的 token 數量上限 ${limit}`, 5000)
