@@ -20,7 +20,7 @@ export function loadCredentials() {
         const api_deployment = localStorage.getItem('api_deployment');
         const api_version = localStorage.getItem('api_version');
         const endpoint = api_endpoint.replace(/\/+$/, '');
-        const base_url = `${endpoint}/openai/deployments/${api_deployment}?api-version=${api_version}`;
+        const base_url = `${endpoint}/openai/deployments/${api_deployment}/completions?api-version=${api_version}`;
         api_endpoint_completion.value = base_url;
         localStorage.setItem('api_endpoint_completion', base_url);
 
