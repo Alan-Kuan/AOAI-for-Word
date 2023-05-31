@@ -11,7 +11,7 @@ import { PublicClientApplication } from '@azure/msal-browser';
         }
     };
     const login_req = {
-        scopes: [ 'Files.Read' ]
+        scopes: [ 'Files.Read.All' ]
     };
 
     const msal = new PublicClientApplication(config);

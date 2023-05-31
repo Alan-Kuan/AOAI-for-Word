@@ -9,22 +9,29 @@ const authProvider = (callback) => {
 };
 const client = Client.init({ authProvider });
 
-function isDocx(entry) {
-    return entry.file.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-}
-
-let next_link = null;
+let curr_entry = 0;
 
 export async function getWordFiles(limit=5, reload=false) {
-    if (reload) next_link = null;
+    if (reload) curr_entry = 0;
 
-    const path = next_link ?? "/me/drive/root/search(q='.docx')";
-    const res = await client.api(path)
-        .select('id')
-        .select('name')
-        .select('file')
-        .top(limit)
-        .get()
+    const res = await client.api('/search/query')
+        .post({
+            requests: [
+                {
+                    entityTypes: [ 'driveItem' ],
+                    query: {
+                        queryString: 'filetype:docx'
+                    },
+                    fields: [
+                        'id',
+                        'name',
+                        'createdBy',
+                    ],
+                    from: curr_entry,
+                    size: limit,
+                }
+            ]
+        })
         .catch(err => {
             const err_msg = err.message;
             if (err_msg === 'Access token has expired or is not yet valid.') {
@@ -43,19 +50,21 @@ export async function getWordFiles(limit=5, reload=false) {
         };
     }
 
-    const entries = res.value
-        .filter(isDocx)
+    // update current entry to next entry
+    curr_entry += limit;
+
+    const hits_container = res.value[0].hitsContainers[0];
+    const entries = hits_container.hits
         .map(entry => {
             return {
-                id: entry.id,
-                name: entry.name,
-            }
+                id: entry.resource.id,
+                name: entry.resource.name,
+            };
         });
 
-    next_link = res['@odata.nextLink'] ?? null;
     return {
         error: false,
-        has_next: next_link !== null,
+        has_next: hits_container.moreResultsAvailable,
         entries
     };
 }
