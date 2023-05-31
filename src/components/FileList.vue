@@ -32,7 +32,7 @@ const emit = defineEmits([
 
   <v-alert
     v-if="error"
-    class="mt-2 mx-2"
+    class="ma-4"
     text="發生錯誤，請嘗試重新登入"
     type="error"
     border="top"
