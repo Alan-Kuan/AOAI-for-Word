@@ -8,6 +8,7 @@ import {
 
   api_key,
   api_endpoint_completion,
+  api_endpoint_dalle,
 
   loadCredentials,
   saveCredentials,
@@ -73,6 +74,11 @@ onMounted(() => loadCredentials());
         <v-text-field
           label="Completion API 端點"
           v-model="api_endpoint_completion"
+          variant="underlined"
+        />
+        <v-text-field
+          label="DALL·E API 端點"
+          v-model="api_endpoint_dalle"
           variant="underlined"
         />
         <v-text-field

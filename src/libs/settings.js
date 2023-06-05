@@ -8,10 +8,12 @@ export const max_tokens = ref('1000');
 
 export const api_key = ref('');
 export const api_endpoint_completion = ref('');
+export const api_endpoint_dalle = ref('');
 
 export function loadCredentials() {
     api_key.value = localStorage.getItem('api_key') ?? '';
     api_endpoint_completion.value = localStorage.getItem('api_endpoint_completion') ?? '';
+    api_endpoint_dalle.value = localStorage.getItem('api_endpoint_dalle') ?? '';
 
     // NOTE: migrate old config into new one
     //       plan to be removed in next major update
@@ -33,12 +35,14 @@ export function loadCredentials() {
 export function saveCredentials() {
     localStorage.setItem('api_key', api_key.value);
     localStorage.setItem('api_endpoint_completion', api_endpoint_completion.value);
+    localStorage.setItem('api_endpoint_dalle', api_endpoint_dalle.value);
     notify('儲存成功');
 }
 
 export function cleanCredentials() {
     localStorage.removeItem('api_key');
     localStorage.removeItem('api_endpoint_completion');
+    localStorage.removeItem('api_endpoint_dalle');
     api_key.value = '';
     api_endpoint_completion.value = '';
     notify('移除成功');
