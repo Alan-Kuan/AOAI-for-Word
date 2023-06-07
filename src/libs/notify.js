@@ -10,7 +10,3 @@ export function notify(msg, timeout=3000) {
         setTimeout(() => show.value = false, timeout);
     }
 }
-
-export function dismiss() {
-    show.value = false;
-}
