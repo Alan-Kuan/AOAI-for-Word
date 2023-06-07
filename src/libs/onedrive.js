@@ -27,6 +27,7 @@ export async function getWordFiles(limit=5, query_filename, reload=false) {
                     fields: [
                         'id',
                         'name',
+                        'driveId',
                         'createdBy',
                     ],
                     from: curr_entry,
@@ -61,6 +62,8 @@ export async function getWordFiles(limit=5, query_filename, reload=false) {
             return {
                 id: entry.resource.id,
                 name: entry.resource.name,
+                drive_id: entry.resource.listItem.fields.driveId,
+                creator: entry.resource.listItem.fields.createdBy,
             };
         });
 
@@ -71,8 +74,8 @@ export async function getWordFiles(limit=5, query_filename, reload=false) {
     };
 }
 
-export async function getContent(id) {
-    const res = await client.api(`/me/drive/items/${id}/content`)
+export async function getContent(drive_id, id) {
+    const res = await client.api(`/me/drives/${drive_id}/items/${id}/content`)
         .get();
 
     let buffers = [];

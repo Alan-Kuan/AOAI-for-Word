@@ -27,7 +27,7 @@ const loading = ref(false);
 const error = ref(false);
 const has_next = ref(false);
 const files = ref([]);
-const selected_file_id = ref('');
+const selected_file = ref({});
 const query_filename = ref('');
 
 
@@ -54,7 +54,7 @@ async function getFiles(reload=false) {
 
 
 async function getSelectedContent() {
-  const content = await getContent(selected_file_id.value);
+  const content = await getContent(selected_file.value.drive_id, selected_file.value.id);
   return content;
 }
 
@@ -82,7 +82,7 @@ async function onConvert() {
         notify(t('message.require_selection'));
         return;
       }
-      if (!selected_file_id.value) {
+      if (!selected_file.value) {
         notify(t('message.no_file_selected'));
         return;
       }
@@ -180,7 +180,7 @@ onMounted(() => {
             :error="error"
             :has_next="has_next"
             :files="files"
-            v-model:selected="selected_file_id"
+            v-model:selected="selected_file"
             @reload="getFiles(true)"
             @load_more="getFiles()"
           />

@@ -11,7 +11,7 @@ const prop = defineProps({
   error: { type: Boolean, default: false },
   has_next: { type: Boolean, default: false },
   files: { type: Array, required: true },
-  selected: { type: String, required: true },
+  selected: { type: Object, required: true },
 });
 
 const emit = defineEmits([
@@ -57,14 +57,14 @@ const emit = defineEmits([
       <v-list-item
         v-for="file in files"
         :key="file.id"
-        :value="file.id"
         :title="file.name"
-        @click="$emit('update:selected', file.id)"
+        :subtitle="file.creator"
+        @click="$emit('update:selected', { drive_id: file.drive_id, id: file.id })"
       >
         <template v-slot:prepend>
-          <v-avatar :color="file.id === selected ? 'green' : 'blue'">
+          <v-avatar :color="file.id === selected.id ? 'green' : 'blue'">
             <v-icon color="white">
-              {{ file.id === selected ? 'mdi-check' : 'mdi-file-word' }}
+              {{ file.id === selected.id ? 'mdi-check' : 'mdi-file-word' }}
             </v-icon>
           </v-avatar>
         </template>
