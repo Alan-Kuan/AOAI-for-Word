@@ -54,9 +54,7 @@ async function getFiles(reload=false) {
 
 
 async function getSelectedContent() {
-  loading.value = true;
   const content = await getContent(selected_file_id.value);
-  loading.value = false;
   return content;
 }
 
