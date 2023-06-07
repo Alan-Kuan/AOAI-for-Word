@@ -1,4 +1,11 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({
+  inheritLocale: true,
+  useScope: 'local',
+});
+
 const prop = defineProps({
   loading: { type: Boolean, default: false },
   error: { type: Boolean, default: false },
@@ -27,13 +34,13 @@ const emit = defineEmits([
     variant="flat"
     @click="$emit('reload')"
   >
-    重新整理
+    {{ t('button.reload') }}
   </v-btn>
 
   <v-alert
     v-if="error"
     class="ma-4"
-    text="發生錯誤，請嘗試重新登入"
+    :text="t('alert.retry_login')"
     type="error"
     border="top"
     border-color="red"
@@ -71,7 +78,22 @@ const emit = defineEmits([
       variant="text"
       @click="$emit('load_more')"
     >
-      載入更多
+      {{ t('button.load_more') }}
     </v-btn>
   </v-card>
 </template>
+
+<i18n lang="yaml">
+zh:
+  button:
+    reload: 重新整理
+    load_more: 載入更多
+  alert:
+    retry_login: 發生錯誤，請嘗試重新登入
+en:
+  button:
+    reload: Reload
+    load_more: Load More
+  alert:
+    retry_login: An error occurred. Please login again.
+</i18n>

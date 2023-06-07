@@ -4,6 +4,7 @@ import {
     api_key,
     api_endpoint_completion,
 } from '@/libs/settings.js';
+import i18n from '@/i18n.js';
 import { notify } from '@/libs/notify.js';
 import { curr_completion_tokens, curr_prompt_tokens, total_tokens } from '@/libs/token_usage';
 
@@ -42,12 +43,12 @@ export async function complete(prompt, temperature, top_p) {
             const err_msg = data.error.message;
 
             if (data.error.code === '404') {
-                notify(`未知的 API 端點`, 5000);
+                notify(i18n.global.t('message.openai.unknown_api_endpoint'), 5000);
             } else if (err_msg.startsWith("This model's maximum context length is")) {
                 const limit = err_msg.match(/\d+/)[0];
-                notify(`超過此模型單次請求的 token 數量上限 ${limit}`, 5000)
+                notify(i18n.global.t('message.openai.token_limit_exceeded', { limit }), 5000)
             } else if (err_msg.includes('have exceeded call rate limit')) {
-                notify('達到此模型每分鐘內的使用量上限');
+                notify(i18n.global.t('message.openai.request_limit_exceeded'));
             } else {
                 notify(err_msg, -1);
                 console.error(data);

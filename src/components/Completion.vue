@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import i18n from '@/i18n.js';
 import * as openai from '@/libs/openai.js';
 import { notify } from '@/libs/notify.js';
 import { generate_location, generate_mode } from '@/libs/settings.js';
@@ -9,6 +12,11 @@ import { templates } from '@/templates/completion.js';
 import FoldableSection from '@/components/FoldableSection.vue';
 import FileList from '@/components/FileList.vue';
 
+
+const { t } = useI18n({
+  inheritLocale: true,
+  useScope: 'local',
+});
 
 const selected_template = ref(templates[0]);
 const source = ref(0);
@@ -24,8 +32,11 @@ const query_filename = ref('');
 
 
 function onResetDefaultTemplate() {
-  selected_template.value.prompt_prefix = selected_template.value.default_prompt_prefix;
-  selected_template.value.prompt_suffix = selected_template.value.default_prompt_suffix;
+  const locale = i18n.global.locale.value;
+  selected_template.value.prompt_prefix =
+    selected_template.value[locale].default_prompt_prefix;
+  selected_template.value.prompt_suffix = 
+    selected_template.value[locale].default_prompt_suffix;
 }
 
 
@@ -62,7 +73,7 @@ async function onConvert() {
     // from selection
     if (source.value === 0) {
       if (range.isEmpty) {
-        notify('沒有選取任何文字');
+        notify(t('message.no_text_selected'));
         return;
       }
       source_text = range.text;
@@ -70,11 +81,11 @@ async function onConvert() {
     // from onedrive
     else if (source.value === 1) {
       if (generate_location.value !== 3 && range.isEmpty) {
-        notify('選擇的生成位置要求選取範圍');
+        notify(t('message.require_selection'));
         return;
       }
       if (!selected_file_id.value) {
-        notify('沒有選擇任何檔案');
+        notify(t('message.no_file_selected'));
         return;
       }
       generating.value = true;
@@ -115,9 +126,10 @@ async function onConvert() {
 
 
 onMounted(() => {
+  const locale = i18n.global.locale.value;
   for (let template of templates) {
-    template.prompt_prefix = ref(template.default_prompt_prefix);
-    template.prompt_suffix = ref(template.default_prompt_suffix);
+    template.prompt_prefix = ref(template[locale].default_prompt_prefix);
+    template.prompt_suffix = ref(template[locale].default_prompt_suffix);
   }
 
   getFiles();
@@ -125,20 +137,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <FoldableSection title="文本生成">
+  <FoldableSection :title="t('title')">
     <v-card class="mb-3" flat>
       <v-card-text>
         <v-select
-          label="範本"
+          :label="t('field.template')"
           v-model="selected_template"
           :items="templates"
-          item-title="name"
+          :item-title="`${i18n.global.locale.value}.name`"
           variant="underlined"
           return-object
         />
 
         <div>
-          <v-label class="text-caption" text="文字來源" />
+          <v-label class="text-caption" :text="t('field.text_source')" />
         </div>
         <div class="mb-3">
           <v-btn-toggle
@@ -148,7 +160,7 @@ onMounted(() => {
             variant="outlined"
             divided
           >
-            <v-btn>選取範圍</v-btn>
+            <v-btn class="text-none">{{ t('button.selection') }}</v-btn>
             <v-btn class="text-none">OneDrive</v-btn>
           </v-btn-toggle>
         </div>
@@ -178,7 +190,7 @@ onMounted(() => {
 
 
         <div>
-          <v-label class="text-caption" text="提詞前綴/後綴" />
+          <v-label class="text-caption" :text="t('field.prompt_prefix_suffix')" />
         </div>
 
         <v-btn
@@ -189,17 +201,17 @@ onMounted(() => {
           variant="flat"
           @click="onResetDefaultTemplate"
         >
-          恢復預設內容
+          {{ t('button.reset') }}
         </v-btn>
 
         <v-textarea
-          label="提詞前綴"
+          :label="t('field.prompt_prefix')"
           v-model="selected_template.prompt_prefix"
           rows="3"
           counter
         />
         <v-textarea
-          label="提詞後綴"
+          :label="t('field.prompt_suffix')"
           v-model="selected_template.prompt_suffix"
           rows="3"
           counter
@@ -211,9 +223,44 @@ onMounted(() => {
           @click="onConvert"
         >
           <v-icon icon="mdi-fountain-pen-tip" />
-          生成
+          {{ t('button.generate') }}
         </v-btn>
       </v-card-text>
     </v-card>
   </FoldableSection>
 </template>
+
+<i18n lang="yaml">
+zh:
+  title: 文本生成
+  field:
+    template: 範本
+    text_source: 文字來源
+    prompt_prefix_suffix: 提詞前綴/後綴
+    prompt_prefix: 提詞前綴
+    prompt_suffix: 提詞後綴
+  button:
+    selection: 選取範圍
+    reset: 恢復至預設內容
+    generate: 生成
+  message:
+    no_text_selected: 沒有選取任何文字
+    no_file_selected: 沒有選擇任何檔案
+    require_selection: 選擇的生成位置要求選取範圍
+en:
+  title: Completion
+  field:
+    template: Template
+    text_source: Text Source
+    prompt_prefix_suffix: Prompt Prefix/Suffix
+    prompt_prefix: Prompt Prefix
+    prompt_suffix: Prompt Suffix
+  button:
+    selection: Selection
+    reset: Reset to Default
+    generate: Generate
+  message:
+    no_text_selected: No text was selected
+    no_file_selected: No file was selected
+    require_selection: Chosen generation location requires text selection
+</i18n>

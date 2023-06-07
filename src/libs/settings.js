@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import i18n from '@/i18n.js';
 import { notify } from '@/libs/notify.js';
 
 export const generate_location = ref(0);
@@ -33,7 +34,7 @@ export function loadCredentials() {
 export function saveCredentials() {
     localStorage.setItem('api_key', api_key.value);
     localStorage.setItem('api_endpoint_completion', api_endpoint_completion.value);
-    notify('儲存成功');
+    notify(i18n.global.t('message.settings.save_succ'));
 }
 
 export function cleanCredentials() {
@@ -41,5 +42,14 @@ export function cleanCredentials() {
     localStorage.removeItem('api_endpoint_completion');
     api_key.value = '';
     api_endpoint_completion.value = '';
-    notify('移除成功');
+    notify(i18n.global.t('message.settings.remove_succ'));
+}
+
+export function saveLanguageIndex(lang_idx) {
+    localStorage.setItem('language', lang_idx);
+}
+
+export function getLanguageIndex() {
+    const lang_idx = localStorage.getItem('language') ?? '0';
+    return parseInt(lang_idx, 10);
 }

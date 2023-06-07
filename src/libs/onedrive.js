@@ -1,6 +1,8 @@
 import 'isomorphic-fetch';
 import mammoth from 'mammoth/mammoth.browser';
 import { Client } from '@microsoft/microsoft-graph-client';
+
+import i18n from '@/i18n.js';
 import { notify } from '@/libs/notify.js';
 
 const authProvider = (callback) => {
@@ -35,7 +37,7 @@ export async function getWordFiles(limit=5, query_filename, reload=false) {
         .catch(err => {
             const err_msg = err.message;
             if (err_msg === 'Access token has expired or is not yet valid.') {
-                notify('請重新登入以瀏覽 OneDrive 內容');
+                notify(i18n.global.t('message.onedrive.relogin'));
             } else {
                 console.error(err);
             }
@@ -98,7 +100,7 @@ export async function getContent(id) {
             return res.value;
         })
         .catch(err => {
-            notify('讀取檔案時發生未知錯誤');
+            notify(i18n.global.t('message.onedrive.load_failed'));
             console.error(err);
             return '';
         });

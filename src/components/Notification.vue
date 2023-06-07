@@ -1,5 +1,11 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
 import { show, message, dismiss } from '@/libs/notify.js';
+
+const { t } = useI18n({
+  inheritLocale: true,
+  useScope: 'local',
+});
 </script>
 
 <template>
@@ -18,8 +24,17 @@ import { show, message, dismiss } from '@/libs/notify.js';
         variant="text"
         @click="dismiss"
       >
-        Close
+        {{ t('button.close') }}
       </v-btn>
     </template>
   </v-snackbar>
 </template>
+
+<i18n lang="yaml">
+zh:
+  button:
+    close: 關閉
+en:
+  button:
+    close: Close
+</i18n>
