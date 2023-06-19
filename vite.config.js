@@ -3,11 +3,11 @@ import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 
-const https_cred_path = `${ os.homedir() }/.office-addin-dev-certs`
+const https_cred_path = `${ os.homedir() }/.office-addin-dev-certs`;
 
 function loadIfExists(file_name) {
     const file_path = path.resolve(`${https_cred_path}/${file_name}`);
