@@ -3,9 +3,14 @@ import {
     max_tokens,
     api_key,
     api_endpoint_completion,
+    api_endpoint_dalle,
 } from '@/libs/settings.js';
+import {
+    curr_completion_tokens,
+    curr_prompt_tokens,
+    total_tokens
+} from '@/libs/token_usage';
 import { notify } from '@/libs/notify.js';
-import { curr_completion_tokens, curr_prompt_tokens, total_tokens } from '@/libs/token_usage';
 
 async function post(endpoint, data) {
     return await fetch(endpoint, {
@@ -55,4 +60,14 @@ export async function complete(prompt, temperature, top_p) {
 
             return null;
         });
+}
+
+export async function imagen(caption='a big brown cat eating a fish') {
+    console.log('imagen')
+    return await post(api_endpoint_dalle.value, {
+            caption,
+            resolution: '1024x1024',
+        })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
 }
